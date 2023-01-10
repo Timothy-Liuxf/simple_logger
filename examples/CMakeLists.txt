@@ -1,0 +1,24 @@
+add_executable(hello_world hello_world.cc)
+
+add_executable(style_cpp style_cpp.cc)
+
+add_executable(style_function style_function.cc)
+
+add_executable(style_format style_format.cc)
+
+add_executable(level_default level_default.cc)
+
+add_executable(level_disable level_disable.cc)
+target_compile_definitions(level_disable PRIVATE SIMPLE_LOGGER_DISABLE_LOG)
+
+add_executable(level_debug level_debug.cc)
+target_compile_definitions(level_debug PRIVATE SIMPLE_LOGGER_ENABLE_LOG_DEBUG)
+
+add_executable(level_info level_info.cc)
+target_compile_definitions(level_info PRIVATE SIMPLE_LOGGER_ENABLE_LOG_INFO)
+
+add_executable(level_warn level_warn.cc)
+target_compile_definitions(level_warn PRIVATE SIMPLE_LOGGER_ENABLE_LOG_WARN)
+
+add_executable(level_error level_error.cc)
+target_compile_definitions(level_error PRIVATE SIMPLE_LOGGER_ENABLE_LOG_ERROR)

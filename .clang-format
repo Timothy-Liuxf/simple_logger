@@ -1,0 +1,18 @@
+---
+Language: Cpp
+BasedOnStyle: Google
+ColumnLimit: 80
+IncludeBlocks: Preserve
+AlignAfterOpenBracket: Align
+AlignEscapedNewlines: Right
+AlignOperands: AlignAfterOperator
+AlignTrailingComments: true
+AlignConsecutiveMacros: AcrossEmptyLinesAndComments
+AlignConsecutiveAssignments: AcrossEmptyLinesAndComments
+AlignConsecutiveBitFields: AcrossEmptyLinesAndComments
+AlignConsecutiveDeclarations: AcrossEmptyLinesAndComments
+SpaceBeforeCpp11BracedList: true
+Standard: c++17
+TabWidth: 8
+UseTab: Never
+---
