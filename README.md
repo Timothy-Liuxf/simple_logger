@@ -72,7 +72,7 @@ You can also log messages just as a variadic function:
 using namespace simple_logger;
 
 int main() {
-  logger.Debug() << "This message shouldn't be printed by default!";
+  logger.Debug("This message shouldn't be printed by default!");
   logger.Info("Info message: <", 8888, '>');
   logger.Warn("Warn message: <", 8888, '>');
   logger.Error("Error message: <", 8888, '>');
@@ -90,7 +90,7 @@ You can also log messages in C++20 format library style:
 using namespace simple_logger;
 
 int main() {
-  logger.Debugf("This message shouldn't be printed by default!!");
+  logger.Debugf("This message shouldn't be printed by default!");
   logger.Infof("Info message: <{}>", 8888);
   logger.Warnf("Warn message: <{}>", 8888);
   logger.Errorf("Error message: <{}>", 8888);
@@ -114,7 +114,7 @@ With [fmtlib](https://github.com/fmtlib/fmt), `simple_logger` can support almost
    
    int main() {
      std::array arr {0, 1, 2, 3};
-     logger.Infof("Info message: {}: {}", arr, arr.size());
+     logger.Infof("Info message: {}", arr);
      return 0;
    }
    ```
@@ -138,7 +138,7 @@ With [fmtlib](https://github.com/fmtlib/fmt), `simple_logger` can support almost
    }
    ```
 
-3. F
+3. Literal-based format
 
    ```c++
    #include <simple_logger/simple_logger.hpp>
