@@ -156,6 +156,17 @@ With [fmtlib](https://github.com/fmtlib/fmt), `simple_logger` can support almost
 
 4. For more usage, please see [fmtlib API documentation](https://fmt.dev/latest/api.html).
 
+### Specify Log Levels
+
+To specify log levels, you should define the following macros before including `simple_logger/simple_logger.hpp`:
+
++ `SIMPLE_LOGGER_DISABLE_LOG`: No logs will be printed
++ `SIMPLE_LOGGER_ENABLE_LOG_DEBUG`: Log messages on `Debug`, `Info`, `Warning` and `Error` levels will be printed
++ `SIMPLE_LOGGER_ENABLE_LOG_INFO`: Log messages on `Info`, `Warning` and `Error` levels will be printed
++ `SIMPLE_LOGGER_ENABLE_LOG_WARN`: Log messages on `Warning` and `Error` levels will be printed
++ `SIMPLE_LOGGER_ENABLE_LOG_ERROR`: Only log messages on `Error` level will be printed
++ If no macro is defined, it behaves just as `SIMPLE_LOGGER_ENABLE_LOG_INFO` is defined
+
 ## Build Examples
 
 Source code of the examples are in the `examples` directory.
