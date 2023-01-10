@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0.0)
 project(simple_logger
     VERSION 0.1.0
     LANGUAGES CXX
-    DESCRIPTION "A simple and header-only log library for C++"
+    DESCRIPTION "A simple, multifunctional and header-only log library for C++17"
     HOMEPAGE_URL "https://github.com/Timothy-Liuxf/simple_logger"
 )
 set(CMAKE_CXX_STANDARD 17)
