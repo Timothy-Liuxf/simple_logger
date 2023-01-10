@@ -1,3 +1,8 @@
+// This file is part of simple_logger.
+// Copyright (c) 2023, Timothy Liu. All rights reserved.
+// License    : MIT License
+// Project URL: https://github.com/Timothy-Liuxf/simple_logger
+
 #ifndef SIMPLE_LOGGER_HPP_
 #define SIMPLE_LOGGER_HPP_
 
