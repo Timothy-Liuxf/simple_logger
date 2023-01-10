@@ -46,8 +46,8 @@ extern "C" __declspec(dllimport) BOOL
 
 #ifndef _WINBASE_
 
-#define STD_INPUT_HANDLE  ((DWORD)-10)
-#define STD_OUTPUT_HANDLE ((DWORD)-11)
-#define STD_ERROR_HANDLE  ((DWORD)-12)
+#define STD_INPUT_HANDLE  ((win32::DWORD)-10)
+#define STD_OUTPUT_HANDLE ((win32::DWORD)-11)
+#define STD_ERROR_HANDLE  ((win32::DWORD)-12)
 
 #endif  // _WINBASE_

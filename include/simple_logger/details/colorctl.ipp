@@ -21,24 +21,24 @@ static constexpr inline ColorCtlType kBeginYellow =
 inline ColorCtlType GetOutputEndColorToken() noexcept {
   win32::CONSOLE_SCREEN_BUFFER_INFO csbi;
   win32::GetConsoleScreenBufferInfo(
-      win32::GetStdHandle(win32::STD_OUTPUT_HANDLE), &csbi);
+      win32::GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
   return csbi.wAttributes;
 }
 
 inline ColorCtlType GetErrorEndColorToken() noexcept {
   win32::CONSOLE_SCREEN_BUFFER_INFO csbi;
   win32::GetConsoleScreenBufferInfo(
-      win32::GetStdHandle(win32::STD_ERROR_HANDLE), &csbi);
+      win32::GetStdHandle(STD_ERROR_HANDLE), &csbi);
   return csbi.wAttributes;
 }
 
 inline void SetOutputColor(ColorCtlType token) {
-  win32::SetConsoleTextAttribute(win32::GetStdHandle(win32::STD_OUTPUT_HANDLE),
+  win32::SetConsoleTextAttribute(win32::GetStdHandle(STD_OUTPUT_HANDLE),
                                  token);
 }
 
 inline void SetErrorColor(ColorCtlType token) {
-  win32::SetConsoleTextAttribute(win32::GetStdHandle(win32::STD_ERROR_HANDLE),
+  win32::SetConsoleTextAttribute(win32::GetStdHandle(STD_ERROR_HANDLE),
                                  token);
 }
 

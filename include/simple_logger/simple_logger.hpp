@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string_view>
 #include <utility>
+#include <functional>
 
 #include <fmt/chrono.h>
 
