@@ -41,7 +41,7 @@ $ git submodule update --init --recursive
 
 ## Get Started
 
-`simple_logger` is a header-only library and needn't to be built. Just add the `include` directory into the *include directory* of your C++ project and include `simple_logger/simple_logger.hpp` to get started.
+`simple_logger` is a header-only library and needn't to be built. Just add the `include` and `third_party/fmt/include` directories into the *include directories* of your C++ project and include `simple_logger/simple_logger.hpp` to get started.
 
 ### Log Levels
 
