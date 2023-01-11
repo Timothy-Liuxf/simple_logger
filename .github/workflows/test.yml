@@ -37,6 +37,9 @@ jobs:
         uses: microsoft/setup-msbuild@v1.1
         with:
           msbuild-architecture: x64
+      - name: Pull submodules
+        run: |
+          git submodule update --init --recursive
       - name: Build examples
         run: |
           mkdir build
