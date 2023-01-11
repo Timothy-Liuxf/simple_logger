@@ -14,6 +14,9 @@ jobs:
       - uses: actions/setup-python@v4
       - name: Setup CMake
         uses: jwlawson/actions-setup-cmake@v1.13
+      - name: Pull submodules
+        run: |
+          git submodule update --init --recursive
       - name: Build examples
         run: |
           mkdir build
