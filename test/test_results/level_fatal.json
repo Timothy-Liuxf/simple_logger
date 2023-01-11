@@ -1,0 +1,10 @@
+[
+    {
+        "level": "none",
+        "regex": "There should be 1 log below: "
+    },
+    {
+        "level": "fatal",
+        "regex": "Fatal message."
+    }
+]

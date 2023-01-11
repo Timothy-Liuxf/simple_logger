@@ -9,9 +9,11 @@ using namespace simple_logger;
 
 int main() {
   std::cout << "There should be no logs below: " << std::endl;
+  logger.Trace("This message shouldn't be printed!");
   logger.Debug("This message shouldn't be printed!");
   logger.Info("This message shouldn't be printed!");
   logger.Warn("This message shouldn't be printed!");
   logger.Error("This message shouldn't be printed!");
+  logger.Fatal("This message shouldn't be printed!");
   return 0;
 }

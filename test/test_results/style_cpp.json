@@ -10,5 +10,9 @@
     {
         "level": "error",
         "regex": "Error message: <8888>"
+    },
+    {
+        "level": "fatal",
+        "regex": "Fatal message: <8888>"
     }
 ]

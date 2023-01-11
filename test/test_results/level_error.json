@@ -1,10 +1,14 @@
 [
     {
         "level": "none",
-        "regex": "There should be 1 log below: "
+        "regex": "There should be 2 logs below: "
     },
     {
         "level": "error",
         "regex": "Error message."
+    },
+    {
+        "level": "fatal",
+        "regex": "Fatal message."
     }
 ]

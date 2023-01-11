@@ -8,10 +8,12 @@
 using namespace simple_logger;
 
 int main() {
-  std::cout << "There should be 4 logs below: " << std::endl;
+  std::cout << "There should be 5 logs below: " << std::endl;
+  logger.Trace("This message shouldn't be printed!");
   logger.Debug("Debug message.");
   logger.Info("Info message.");
   logger.Warn("Warn message.");
   logger.Error("Error message.");
+  logger.Fatal("Fatal message.");
   return 0;
 }

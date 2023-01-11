@@ -1,7 +1,11 @@
 [
     {
         "level": "none",
-        "regex": "There should be 5 logs below: "
+        "regex": "There should be 6 logs below: "
+    },
+    {
+        "level": "trace",
+        "regex": "Trace message."
     },
     {
         "level": "debug",

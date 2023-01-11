@@ -17,19 +17,24 @@ using namespace simple_logger;
 
 int main() {
   std::array arr {0, 1, 2, 3};
+  logger.Tracef("This message shouldn't be printed!");
   logger.Debugf("This message shouldn't be printed!");
   logger.Infof("Info message: {}: {}", arr, arr.size());
   logger.Warnf("Warn message: {}: {}", arr, arr.size());
   logger.Errorf("Error message: {}: {}", arr, arr.size());
+  logger.Fatalf("Fatal message: {}: {}", arr, arr.size());
 
   auto current_time = fmt::localtime(
       std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
+  logger.Tracef("This message shouldn't be printed!");
   logger.Debugf("This message shouldn't be printed!");
   logger.Infof("Info message: current_time: {:%Y-%m-%d %H:%M:%S}",
                current_time);
   logger.Warnf("Warn message: current_time: {:%Y-%m-%d %H:%M:%S}",
                current_time);
   logger.Errorf("Error message: current_time: {:%Y-%m-%d %H:%M:%S}",
+                current_time);
+  logger.Fatalf("Fatal message: current_time: {:%Y-%m-%d %H:%M:%S}",
                 current_time);
   return 0;
 }

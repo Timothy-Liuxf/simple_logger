@@ -47,7 +47,10 @@ def main():
             if expected[i]['level'] == 'none':
                 expected_rgx = '^' + expected[i]['regex'] + '$'
             else:
-                if expected[i]['level'] == 'debug':
+                if expected[i]['level'] == 'trace':
+                    prefix = '\033[34m'
+                    postfix = '\033[0m'
+                elif expected[i]['level'] == 'debug':
                     prefix = '\033[32m'
                     postfix = '\033[0m'
                 elif expected[i]['level'] == 'info':
@@ -57,6 +60,9 @@ def main():
                     prefix = '\033[33m'
                     postfix = '\033[0m'
                 elif expected[i]['level'] == 'error':
+                    prefix = '\033[31m'
+                    postfix = '\033[0m'
+                elif expected[i]['level'] == 'fatal':
                     prefix = '\033[31m'
                     postfix = '\033[0m'
                 else:

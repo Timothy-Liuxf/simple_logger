@@ -17,24 +17,30 @@
 
 #include <fmt/chrono.h>
 
-#define SIMPLE_LOGGER_LOG_NONE  0
-#define SIMPLE_LOGGER_LOG_ERROR 1
-#define SIMPLE_LOGGER_LOG_WARN  2
-#define SIMPLE_LOGGER_LOG_INFO  3
-#define SIMPLE_LOGGER_LOG_DEBUG 4
+#define SIMPLE_LOGGER_LOG_NONE_LEVEL  0
+#define SIMPLE_LOGGER_LOG_FATAL_LEVEL 1
+#define SIMPLE_LOGGER_LOG_ERROR_LEVEL 2
+#define SIMPLE_LOGGER_LOG_WARN_LEVEL  3
+#define SIMPLE_LOGGER_LOG_INFO_LEVEL  4
+#define SIMPLE_LOGGER_LOG_DEBUG_LEVEL 5
+#define SIMPLE_LOGGER_LOG_TRACE_LEVEL 6
 
 #if defined(SIMPLE_LOGGER_DISABLE_LOG)
-#define SIMPLE_LOGGER_LOG_LEVEL SIMPLE_LOGGER_LOG_NONE
+#define SIMPLE_LOGGER_LOG_LEVEL SIMPLE_LOGGER_LOG_NONE_LEVEL
+#elif defined(SIMPLE_LOGGER_ENABLE_LOG_TRACE)
+#define SIMPLE_LOGGER_LOG_LEVEL SIMPLE_LOGGER_LOG_TRACE_LEVEL
 #elif defined(SIMPLE_LOGGER_ENABLE_LOG_DEBUG)
-#define SIMPLE_LOGGER_LOG_LEVEL SIMPLE_LOGGER_LOG_DEBUG
+#define SIMPLE_LOGGER_LOG_LEVEL SIMPLE_LOGGER_LOG_DEBUG_LEVEL
 #elif defined(SIMPLE_LOGGER_ENABLE_LOG_INFO)
-#define SIMPLE_LOGGER_LOG_LEVEL SIMPLE_LOGGER_LOG_INFO
+#define SIMPLE_LOGGER_LOG_LEVEL SIMPLE_LOGGER_LOG_INFO_LEVEL
 #elif defined(SIMPLE_LOGGER_ENABLE_LOG_WARN)
-#define SIMPLE_LOGGER_LOG_LEVEL SIMPLE_LOGGER_LOG_WARN
+#define SIMPLE_LOGGER_LOG_LEVEL SIMPLE_LOGGER_LOG_WARN_LEVEL
 #elif defined(SIMPLE_LOGGER_ENABLE_LOG_ERROR)
-#define SIMPLE_LOGGER_LOG_LEVEL SIMPLE_LOGGER_LOG_ERROR
+#define SIMPLE_LOGGER_LOG_LEVEL SIMPLE_LOGGER_LOG_ERROR_LEVEL
+#elif defined(SIMPLE_LOGGER_ENABLE_LOG_FATAL)
+#define SIMPLE_LOGGER_LOG_LEVEL SIMPLE_LOGGER_LOG_FATAL_LEVEL
 #else
-#define SIMPLE_LOGGER_LOG_LEVEL SIMPLE_LOGGER_LOG_INFO
+#define SIMPLE_LOGGER_LOG_LEVEL SIMPLE_LOGGER_LOG_INFO_LEVEL
 #endif
 
 SIMPLE_LOGGER_NAMESPACE_BEGIN
@@ -47,10 +53,12 @@ namespace details {
 #include "details/colorctl.ipp"
 
 using namespace std::literals::string_view_literals;
+static constexpr std::string_view kTracePrompt = "trace"sv;
 static constexpr std::string_view kDebugPrompt = "debug"sv;
 static constexpr std::string_view kInfoPrompt  = "info"sv;
 static constexpr std::string_view kWarnPrompt  = "warn"sv;
 static constexpr std::string_view kErrorPrompt = "error"sv;
+static constexpr std::string_view kFatalPrompt = "fatal"sv;
 
 template <bool ThreadSafe>
 class LoggerLock {
@@ -139,12 +147,31 @@ class Logger {
   };
 
  public:
+  auto Trace() {
+#if SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_TRACE_LEVEL
+    return this->StdoutLog(details::kBeginBlue, details::kTracePrompt);
+#else
+    return EmptyLogHelper();
+#endif  // SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_TRACE_LEVEL
+  }
+
+  template <typename... Vals>
+  void Trace(Vals&&... vals) {
+    (this->Trace() << ... << std::forward<Vals>(vals));
+  }
+
+  template <typename Format, typename... Args>
+  void Tracef(Format&& fmt, Args&&... args) {
+    this->Trace() << fmt::format(std::forward<Format>(fmt),
+                                 std::forward<Args>(args)...);
+  }
+
   auto Debug() {
-#if SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_DEBUG
+#if SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_DEBUG_LEVEL
     return this->StdoutLog(details::kBeginGreen, details::kDebugPrompt);
 #else
     return EmptyLogHelper();
-#endif  // SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_DEBUG
+#endif  // SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_DEBUG_LEVEL
   }
 
   template <typename... Vals>
@@ -159,11 +186,11 @@ class Logger {
   }
 
   auto Info() {
-#if SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_INFO
+#if SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_INFO_LEVEL
     return this->StdoutLog(details::kInfoPrompt);
 #else
     return EmptyLogHelper();
-#endif  // SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_INFO
+#endif  // SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_INFO_LEVEL
   }
 
   template <typename... Vals>
@@ -178,11 +205,11 @@ class Logger {
   }
 
   auto Warn() {
-#if SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_WARN
+#if SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_WARN_LEVEL
     return this->StderrLog(details::kBeginYellow, details::kWarnPrompt);
 #else
     return EmptyLogHelper();
-#endif  // SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_WARN
+#endif  // SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_WARN_LEVEL
   }
 
   template <typename... Vals>
@@ -197,11 +224,11 @@ class Logger {
   }
 
   auto Error() {
-#if SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_ERROR
+#if SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_ERROR_LEVEL
     return this->StderrLog(details::kBeginRed, details::kErrorPrompt);
 #else
     return EmptyLogHelper();
-#endif  // SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_ERROR
+#endif  // SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_ERROR_LEVEL
   }
 
   template <typename... Vals>
@@ -212,6 +239,25 @@ class Logger {
   template <typename Format, typename... Args>
   void Errorf(Format&& fmt, Args&&... args) {
     this->Error() << fmt::format(std::forward<Format>(fmt),
+                                 std::forward<Args>(args)...);
+  }
+
+  auto Fatal() {
+#if SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_FATAL_LEVEL
+    return this->StderrLog(details::kBeginRed, details::kFatalPrompt);
+#else
+    return EmptyLogHelper();
+#endif  // SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_FATAL_LEVEL
+  }
+
+  template <typename... Vals>
+  void Fatal(Vals&&... vals) {
+    (this->Fatal() << ... << std::forward<Vals>(vals));
+  }
+
+  template <typename Format, typename... Args>
+  void Fatalf(Format&& fmt, Args&&... args) {
+    this->Fatal() << fmt::format(std::forward<Format>(fmt),
                                  std::forward<Args>(args)...);
   }
 

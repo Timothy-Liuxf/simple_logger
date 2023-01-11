@@ -1,7 +1,7 @@
 [
     {
         "level": "none",
-        "regex": "There should be 3 logs below: "
+        "regex": "There should be 4 logs below: "
     },
     {
         "level": "info",
@@ -14,5 +14,9 @@
     {
         "level": "error",
         "regex": "Error message."
+    },
+    {
+        "level": "fatal",
+        "regex": "Fatal message."
     }
 ]

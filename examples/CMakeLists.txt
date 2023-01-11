@@ -11,6 +11,9 @@ add_executable(level_default level_default.cc)
 add_executable(level_disable level_disable.cc)
 target_compile_definitions(level_disable PRIVATE SIMPLE_LOGGER_DISABLE_LOG)
 
+add_executable(level_trace level_trace.cc)
+target_compile_definitions(level_trace PRIVATE SIMPLE_LOGGER_ENABLE_LOG_TRACE)
+
 add_executable(level_debug level_debug.cc)
 target_compile_definitions(level_debug PRIVATE SIMPLE_LOGGER_ENABLE_LOG_DEBUG)
 
@@ -22,3 +25,6 @@ target_compile_definitions(level_warn PRIVATE SIMPLE_LOGGER_ENABLE_LOG_WARN)
 
 add_executable(level_error level_error.cc)
 target_compile_definitions(level_error PRIVATE SIMPLE_LOGGER_ENABLE_LOG_ERROR)
+
+add_executable(level_fatal level_fatal.cc)
+target_compile_definitions(level_fatal PRIVATE SIMPLE_LOGGER_ENABLE_LOG_FATAL)
