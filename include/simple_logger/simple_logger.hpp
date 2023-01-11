@@ -120,9 +120,7 @@ class Logger {
 
   auto Info() {
 #if SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_INFO
-    Logger::PrintTime(std::cout);
-    std::cout << '[' << details::kInfoPrompt << "] ";
-    return LogHelper(std::cout, [] {});
+    return this->StdoutLog(details::kInfoPrompt);
 #else
     return EmptyLogHelper();
 #endif  // SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_INFO
@@ -192,12 +190,24 @@ class Logger {
     return LogHelper(std::cout, [=] { details::SetOutputColor(end_token); });
   }
 
+  LogHelper StdoutLog(std::string_view level) {
+    Logger::PrintTime(std::cout);
+    std::cout << '[' << level << "] ";
+    return LogHelper(std::cout, [] {});
+  }
+
   LogHelper StderrLog(details::ColorCtlType token, std::string_view level) {
     auto end_token = details::GetErrorEndColorToken();
     details::SetErrorColor(token);
     Logger::PrintTime(std::cerr);
     std::cerr << '[' << level << "] ";
     return LogHelper(std::cerr, [=] { details::SetErrorColor(end_token); });
+  }
+
+  LogHelper StderrLog(std::string_view level) {
+    Logger::PrintTime(std::cerr);
+    std::cerr << '[' << level << "] ";
+    return LogHelper(std::cerr, [] {});
   }
 };
 
