@@ -184,7 +184,7 @@ To specify log levels, you should define the following macros before including `
 
 ### Thread Safety
 
-The log object `logger` is thread-safe. To use thread-unsafe log to avoid improve performance, you can use `uslogger`:
+The log object `logger` is thread-safe. To use thread-unsafe log to avoid improve performance, you can use `uslogger`. For an example, the following code will cause chaos (changing `uslogger` to `logger` would fix it):
 
 ```c++
 #include <simple_logger/simple_logger.hpp>
