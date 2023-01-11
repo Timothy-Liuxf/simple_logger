@@ -1,4 +1,4 @@
-name: build
+name: test
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [master]
 
 jobs:
-  build-on-linux:
+  test-on-linux:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -23,6 +23,26 @@ jobs:
           pushd build
           cmake ..
           make -j$(nproc)
+          popd
+      - name: Run tests
+        run: |
+          python3 ./test/test.py
+
+  test-on-windows:
+      runs-on: windows-latest
+      steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v4
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.1
+        with:
+          msbuild-architecture: x64
+      - name: Build examples
+        run: |
+          mkdir build
+          pushd build
+          cmake ..
+          MSBuild "simple_logger.sln" "-t:Build" "-p:Configuration=Release;Platform=x64" "-m"
           popd
       - name: Run tests
         run: |

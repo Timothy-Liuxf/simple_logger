@@ -17,6 +17,15 @@ def assertTrue(cond: bool, msg: str='Test failed!'):
         print(f'[ERROR] {msg}', file=sys.stderr)
         exit(1)
 
+def isPlatformWindows() -> bool:
+    return platform.system() == 'Windows'
+
+def getExecutionPath(test_name: str) -> str:
+    if isPlatformWindows():
+        return f'examples\Release\{test_name}.exe'
+    else:
+        return f'examples/{test_name}'
+
 def main():
     prev_dir = os.getcwd()
     result_files = [
@@ -26,9 +35,9 @@ def main():
         test_name = os.path.splitext(os.path.basename(result_file))[0]
         print(f'Running test {test_name}...')
         os.chdir('build')
-        result = subprocess.Popen(f'examples/{test_name}',
+        result = subprocess.Popen(getExecutionPath(test_name),
                                   shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        result = result.stdout.read().decode('utf-8')
+        result = result.stdout.read().decode(sys.stdout.encoding)
         os.chdir(prev_dir)
         result = result.splitlines(keepends=False)
         with open(result_file, 'r') as f:
@@ -55,7 +64,7 @@ def main():
 
                 expected_rgx = '^' + r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} \[' + expected[i]['level'] + r'\] ' + expected[i]['regex'] + '$'
                 
-                if platform.system() != 'Windows':
+                if not isPlatformWindows():
                     assertTrue(result[i].startswith(prefix) and result[i].endswith(postfix), f'{test_name} test failed at line {i + 1}: color not correct!')
                     if len(postfix) != 0:
                         result[i] = result[i][len(prefix):-len(postfix)]
