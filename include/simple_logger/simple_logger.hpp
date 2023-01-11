@@ -11,6 +11,7 @@
 #include <cstdint>
 #include <functional>
 #include <iostream>
+#include <mutex>
 #include <string_view>
 #include <utility>
 
@@ -38,6 +39,9 @@
 
 SIMPLE_LOGGER_NAMESPACE_BEGIN
 
+template <bool ThreadSafe>
+class Logger;
+
 namespace details {
 
 #include "details/colorctl.ipp"
@@ -48,10 +52,33 @@ static constexpr std::string_view kInfoPrompt  = "info"sv;
 static constexpr std::string_view kWarnPrompt  = "warn"sv;
 static constexpr std::string_view kErrorPrompt = "error"sv;
 
+template <bool ThreadSafe>
+class LoggerLock {
+ private:
+  static void Lock() {}
+  static void Unlock() {}
+
+  friend class Logger<ThreadSafe>;
+};
+
+template <>
+class LoggerLock<true> {
+ private:
+  static inline std::mutex lock;
+
+ private:
+  static void Lock() { lock.lock(); }
+  static void Unlock() { lock.unlock(); }
+
+  friend class Logger<true>;
+};
+
 }  // namespace details
 
+template <bool ThreadSafe>
 class Logger {
  public:
+  template <bool ThreadSafeInternal>
   class LogHelper {
    private:
     LogHelper(std::ostream& os, const std::function<void()>& postfix)
@@ -65,6 +92,7 @@ class Logger {
     ~LogHelper() noexcept(false) {
       this->postfix_();
       this->os_ << std::endl;
+      details::LoggerLock<ThreadSafeInternal>::Unlock();
     }
 
    public:
@@ -182,36 +210,68 @@ class Logger {
                           std::chrono::system_clock::now())));
   }
 
-  LogHelper StdoutLog(details::ColorCtlType token, std::string_view level) {
-    auto end_token = details::GetOutputEndColorToken();
-    details::SetOutputColor(token);
-    Logger::PrintTime(std::cout);
-    std::cout << '[' << level << "] ";
-    return LogHelper(std::cout, [=] { details::SetOutputColor(end_token); });
+  LogHelper<ThreadSafe> StdoutLog(details::ColorCtlType token,
+                                  std::string_view      level) {
+    auto functy = [&] {
+      auto end_token = details::GetOutputEndColorToken();
+      details::SetOutputColor(token);
+      Logger::PrintTime(std::cout);
+      std::cout << '[' << level << "] ";
+      return LogHelper<ThreadSafe>(std::cout,
+                                   [=] { details::SetOutputColor(end_token); });
+    };
+    return this->HandleThreadSafe(functy);
   }
 
-  LogHelper StdoutLog(std::string_view level) {
-    Logger::PrintTime(std::cout);
-    std::cout << '[' << level << "] ";
-    return LogHelper(std::cout, [] {});
+  LogHelper<ThreadSafe> StdoutLog(std::string_view level) {
+    auto functy = [&] {
+      Logger::PrintTime(std::cout);
+      std::cout << '[' << level << "] ";
+      return LogHelper<ThreadSafe>(std::cout, [] {});
+    };
+    return this->HandleThreadSafe(functy);
   }
 
-  LogHelper StderrLog(details::ColorCtlType token, std::string_view level) {
-    auto end_token = details::GetErrorEndColorToken();
-    details::SetErrorColor(token);
-    Logger::PrintTime(std::cerr);
-    std::cerr << '[' << level << "] ";
-    return LogHelper(std::cerr, [=] { details::SetErrorColor(end_token); });
+  LogHelper<ThreadSafe> StderrLog(details::ColorCtlType token,
+                                  std::string_view      level) {
+    auto functy = [&] {
+      auto end_token = details::GetErrorEndColorToken();
+      details::SetErrorColor(token);
+      Logger::PrintTime(std::cerr);
+      std::cerr << '[' << level << "] ";
+      return LogHelper<ThreadSafe>(std::cerr,
+                                   [=] { details::SetErrorColor(end_token); });
+    };
+    return this->HandleThreadSafe(functy);
   }
 
-  LogHelper StderrLog(std::string_view level) {
-    Logger::PrintTime(std::cerr);
-    std::cerr << '[' << level << "] ";
-    return LogHelper(std::cerr, [] {});
+  LogHelper<ThreadSafe> StderrLog(std::string_view level) {
+    auto functy = [&] {
+      Logger::PrintTime(std::cerr);
+      std::cerr << '[' << level << "] ";
+      return LogHelper<ThreadSafe>(std::cerr, [] {});
+    };
+    return this->HandleThreadSafe(functy);
+  }
+
+  template <typename Functy>
+  LogHelper<ThreadSafe> HandleThreadSafe(Functy&& functy) {
+    if constexpr (ThreadSafe) {
+      details::LoggerLock<ThreadSafe>::Lock();
+      try {
+        return functy();
+      } catch (...) {
+        details::LoggerLock<ThreadSafe>::Unlock();
+        throw;
+      }
+    } else {
+      return functy();
+    }
   }
 };
 
-inline Logger logger;
+inline Logger<true>  logger;    // Thread-safe
+inline Logger<false> uslogger;  // Thread-unsafe
 
 SIMPLE_LOGGER_NAMESPACE_END
 
