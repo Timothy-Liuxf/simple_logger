@@ -6,6 +6,8 @@ add_executable(style_function style_function.cc)
 
 add_executable(style_format style_format.cc)
 
+add_executable(thread_safety thread_safety.cc)
+
 add_executable(level_default level_default.cc)
 
 add_executable(level_disable level_disable.cc)
