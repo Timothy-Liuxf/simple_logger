@@ -1,0 +1,6 @@
+[
+    {
+        "level": "none",
+        "regex": "There should be no logs below: "
+    }
+]

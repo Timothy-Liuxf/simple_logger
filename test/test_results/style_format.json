@@ -1,0 +1,26 @@
+[
+    {
+        "level": "info",
+        "regex": "Info message: \\[0, 1, 2, 3\\]: 4"
+    },
+    {
+        "level": "warn",
+        "regex": "Warn message: \\[0, 1, 2, 3\\]: 4"
+    },
+    {
+        "level": "error",
+        "regex": "Error message: \\[0, 1, 2, 3\\]: 4"
+    },
+    {
+        "level": "info",
+        "regex": "Info message: current_time: \\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}"
+    },
+    {
+        "level": "warn",
+        "regex": "Warn message: current_time: \\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}"
+    },
+    {
+        "level": "error",
+        "regex": "Error message: current_time: \\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}"
+    }
+]

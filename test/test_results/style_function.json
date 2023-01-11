@@ -1,0 +1,14 @@
+[
+    {
+        "level": "info",
+        "regex": "Info message: <8888>"
+    },
+    {
+        "level": "warn",
+        "regex": "Warn message: <8888>"
+    },
+    {
+        "level": "error",
+        "regex": "Error message: <8888>"
+    }
+]

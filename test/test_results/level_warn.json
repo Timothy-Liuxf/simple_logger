@@ -1,0 +1,14 @@
+[
+    {
+        "level": "none",
+        "regex": "There should be 2 logs below: "
+    },
+    {
+        "level": "warn",
+        "regex": "Warn message."
+    },
+    {
+        "level": "error",
+        "regex": "Error message."
+    }
+]

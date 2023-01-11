@@ -1,0 +1,22 @@
+[
+    {
+        "level": "none",
+        "regex": "There should be 4 logs below: "
+    },
+    {
+        "level": "debug",
+        "regex": "Debug message."
+    },
+    {
+        "level": "info",
+        "regex": "Info message."
+    },
+    {
+        "level": "warn",
+        "regex": "Warn message."
+    },
+    {
+        "level": "error",
+        "regex": "Error message."
+    }
+]
