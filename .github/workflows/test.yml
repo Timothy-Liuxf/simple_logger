@@ -10,7 +10,7 @@ jobs:
   test-on-linux:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup Python
         uses: actions/setup-python@v4
       - name: Setup CMake
@@ -18,6 +18,13 @@ jobs:
       - name: Pull submodules
         run: |
           git submodule update --init --recursive
+      - name: Format check
+        uses: DoozyX/clang-format-lint-action@v0.15
+        with:
+          source: 'include examples'
+          extensions: 'c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx,i,ixx,ipp,i++'
+          clangFormatVersion: 14
+          inplace: False
       - name: Build examples
         run: |
           mkdir build
@@ -32,7 +39,7 @@ jobs:
   test-on-windows:
       runs-on: windows-latest
       steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup Python
         uses: actions/setup-python@v4
       - name: Setup MSBuild
