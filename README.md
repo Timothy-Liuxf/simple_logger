@@ -100,7 +100,7 @@ int main() {
 
 ### Format multiple objects
 
-With [fmtlib](https://github.com/fmtlib/fmt), `simple_logger` can support almost all formatting methods in fmtlib. Such as:
+With [fmtlib](https://fmt.dev), `simple_logger` can support almost all formatting methods in fmtlib. Such as:
 
 1. Format ranges:
 
