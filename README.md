@@ -6,6 +6,13 @@
 
 `simple_logger`, a simple, multifunctional and header-only log library for C++17.
 
+## Highlights
+
++ :white_check_mark: Simple: Header-only, easy and convenient to use​
++ :white_check_mark: Multiple styles to use: C++ `iostream` style, function style and ​format style
++ :white_check_mark: High performance: Templatized, no runtime polymorphism
++ :white_check_mark: Customizable thread-safety: Provide both thread-safe and thread-unsafe mode. No extra performance overhead in thread-unsafe mode.
+
 ## Supported Platform
 
 + Unix-like Operating Systems (Linux, MacOS, FreeBSD, ...)
@@ -38,7 +45,7 @@ $ git submodule update --init --recursive
 
 ### Log Levels
 
-There are four log levels in `simple_logger`: `Debug`, `Info`, `Warn` and `Error`. The first two levels will print log messages into `stdout`, while the other two will print into `stderr`. By default, log messages in `Debug` level are **NOT** printed.
+There are six log levels in `simple_logger`: `Trace`, `Debug`, `Info`, `Warn`, `Error` and `Fatal`. The first two levels will print log messages into `stdout`, while the other two will print into `stderr`. By default, log messages in `Debug` level and `Trace` level are **NOT** printed.
 
 ### Quick Start
 
@@ -54,10 +61,12 @@ You can log messages in C++ `iostream` style:
 using namespace simple_logger;
 
 int main() {
+  logger.Trace() << "This message shouldn't be printed by default!";
   logger.Debug() << "This message shouldn't be printed by default!";
   logger.Info() << "Info message: <" << 8888 << '>';
   logger.Warn() << "Warn message: <" << 8888 << '>';
   logger.Error() << "Error message: <" << 8888 << '>';
+  logger.Fatal() << "Fatal message: <" << 8888 << '>';
   return 0;
 }
 ```
@@ -72,10 +81,12 @@ You can also log messages just as a variadic function:
 using namespace simple_logger;
 
 int main() {
+  logger.Trace("This message shouldn't be printed by default!");
   logger.Debug("This message shouldn't be printed by default!");
   logger.Info("Info message: <", 8888, '>');
   logger.Warn("Warn message: <", 8888, '>');
   logger.Error("Error message: <", 8888, '>');
+  logger.Fatal("Fatal message: <", 8888, '>');
   return 0;
 }
 ```
@@ -90,10 +101,12 @@ You can also log messages in C++20 format library style:
 using namespace simple_logger;
 
 int main() {
+  logger.Tracef("This message shouldn't be printed by default!");
   logger.Debugf("This message shouldn't be printed by default!");
   logger.Infof("Info message: <{}>", 8888);
   logger.Warnf("Warn message: <{}>", 8888);
   logger.Errorf("Error message: <{}>", 8888);
+  logger.Fatalf("Fatal message: <{}>", 8888);
   return 0;
 }
 ```
@@ -161,11 +174,48 @@ With [fmtlib](https://fmt.dev), `simple_logger` can support almost all formattin
 To specify log levels, you should define the following macros before including `simple_logger/simple_logger.hpp`:
 
 + `SIMPLE_LOGGER_DISABLE_LOG`: No logs will be printed
-+ `SIMPLE_LOGGER_ENABLE_LOG_DEBUG`: Log messages on `Debug`, `Info`, `Warning` and `Error` levels will be printed
-+ `SIMPLE_LOGGER_ENABLE_LOG_INFO`: Log messages on `Info`, `Warning` and `Error` levels will be printed
-+ `SIMPLE_LOGGER_ENABLE_LOG_WARN`: Log messages on `Warning` and `Error` levels will be printed
-+ `SIMPLE_LOGGER_ENABLE_LOG_ERROR`: Only log messages on `Error` level will be printed
++ `SIMPLE_LOGGER_ENABLE_LOG_TRACE`: Log messages on `Trace`, `Debug`, `Info`, `Warning`, `Error` and `Fatal` levels will be printed
++ `SIMPLE_LOGGER_ENABLE_LOG_DEBUG`: Log messages on `Debug`, `Info`, `Warning`, `Error` and `Fatal` levels will be printed
++ `SIMPLE_LOGGER_ENABLE_LOG_INFO`: Log messages on `Info`, `Warning`, `Error` and `Fatal` levels will be printed
++ `SIMPLE_LOGGER_ENABLE_LOG_WARN`: Log messages on `Warning`, `Error` and `Fatal` levels will be printed
++ `SIMPLE_LOGGER_ENABLE_LOG_ERROR`: Log messages on `Error` and `Fatal` levels will be printed
++ `SIMPLE_LOGGER_ENABLE_LOG_FATAL`: Only log messages on `Fatal` level will be printed
 + If no macro is defined, it behaves just as `SIMPLE_LOGGER_ENABLE_LOG_INFO` is defined
+
+### Thread Safety
+
+The log object `logger` is thread-safe. To use thread-unsafe log to avoid improve performance, you can use `uslogger`:
+
+```c++
+#include <simple_logger/simple_logger.hpp>
+
+#include <memory>
+#include <thread>
+#include <utility>
+#include <vector>
+
+constexpr std::size_t nthreads = 128;
+
+using namespace simple_logger;
+
+int main(int argc, char*[]) {
+  for (std::size_t i = 0; i < nthreads; ++i) {
+    threads[i] = std::make_unique<std::thread>([i, argc] {
+      std::this_thread::yield();
+      uslogger.Info() << "Thread-unsafe "
+                      << "log. "
+                      << "[argc: " << argc << "] "
+                      << "At "
+                      << "Index: " << i << ".";
+    });
+  }
+  for (std::size_t i = 0; i < nthreads; ++i) {
+    threads[i]->join();
+    threads[i].reset();
+  }
+  return 0;
+}
+```
 
 ## Build Examples
 
