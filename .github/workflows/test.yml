@@ -11,7 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v4
+      - name: Setup Python
+        uses: actions/setup-python@v4
       - name: Setup CMake
         uses: jwlawson/actions-setup-cmake@v1.13
       - name: Pull submodules
@@ -32,7 +33,8 @@ jobs:
       runs-on: windows-latest
       steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v4
+      - name: Setup Python
+        uses: actions/setup-python@v4
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.1
         with:
