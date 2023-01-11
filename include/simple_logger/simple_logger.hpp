@@ -42,6 +42,12 @@ namespace details {
 
 #include "details/colorctl.ipp"
 
+using namespace std::literals::string_view_literals;
+static constexpr std::string_view kDebugPrompt = "debug"sv;
+static constexpr std::string_view kInfoPrompt  = "info"sv;
+static constexpr std::string_view kWarnPrompt  = "warn"sv;
+static constexpr std::string_view kErrorPrompt = "error"sv;
+
 }  // namespace details
 
 class Logger {
@@ -93,17 +99,13 @@ class Logger {
   };
 
  public:
+  auto Debug() {
 #if SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_DEBUG
-  LogHelper Debug() {
-    auto end_token = details::GetOutputEndColorToken();
-    details::SetOutputColor(details::kBeginGreen);
-    Logger::PrintTime(std::cout);
-    std::cout << "[debug] ";
-    return LogHelper(std::cout, [=] { details::SetOutputColor(end_token); });
-  }
+    return this->StdoutLog(details::kBeginGreen, details::kDebugPrompt);
 #else
-  EmptyLogHelper Debug() { return EmptyLogHelper(); }
+    return EmptyLogHelper();
 #endif  // SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_DEBUG
+  }
 
   template <typename... Vals>
   void Debug(Vals&&... vals) {
@@ -116,15 +118,15 @@ class Logger {
                                  std::forward<Args>(args)...);
   }
 
+  auto Info() {
 #if SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_INFO
-  LogHelper Info() {
     Logger::PrintTime(std::cout);
-    std::cout << "[info] ";
+    std::cout << '[' << details::kInfoPrompt << "] ";
     return LogHelper(std::cout, [] {});
-  }
 #else
-  EmptyLogHelper Info() { return EmptyLogHelper(); }
+    return EmptyLogHelper();
 #endif  // SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_INFO
+  }
 
   template <typename... Vals>
   void Info(Vals&&... vals) {
@@ -137,17 +139,13 @@ class Logger {
                                 std::forward<Args>(args)...);
   }
 
+  auto Warn() {
 #if SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_WARN
-  LogHelper Warn() {
-    auto end_token = details::GetErrorEndColorToken();
-    details::SetErrorColor(details::kBeginYellow);
-    Logger::PrintTime(std::cerr);
-    std::cerr << "[warn] ";
-    return LogHelper(std::cerr, [=] { details::SetErrorColor(end_token); });
-  }
+    return this->StderrLog(details::kBeginYellow, details::kWarnPrompt);
 #else
-  EmptyLogHelper Warn() { return EmptyLogHelper(); }
+    return EmptyLogHelper();
 #endif  // SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_WARN
+  }
 
   template <typename... Vals>
   void Warn(Vals&&... vals) {
@@ -160,17 +158,13 @@ class Logger {
                                 std::forward<Args>(args)...);
   }
 
+  auto Error() {
 #if SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_ERROR
-  LogHelper Error() {
-    auto end_token = details::GetErrorEndColorToken();
-    details::SetErrorColor(details::kBeginRed);
-    Logger::PrintTime(std::cerr);
-    std::cerr << "[error] ";
-    return LogHelper(std::cerr, [=] { details::SetErrorColor(end_token); });
-  }
+    return this->StderrLog(details::kBeginRed, details::kErrorPrompt);
 #else
-  EmptyLogHelper Error() { return EmptyLogHelper(); }
+    return EmptyLogHelper();
 #endif  // SIMPLE_LOGGER_LOG_LEVEL >= SIMPLE_LOGGER_LOG_ERROR
+  }
 
   template <typename... Vals>
   void Error(Vals&&... vals) {
@@ -184,10 +178,26 @@ class Logger {
   }
 
  private:
-  static void PrintTime(std::ostream& os) {
+  void PrintTime(std::ostream& os) {
     os << fmt::format("{:%Y-%m-%d %H:%M:%S} ",
                       fmt::localtime(std::chrono::system_clock::to_time_t(
                           std::chrono::system_clock::now())));
+  }
+
+  LogHelper StdoutLog(details::ColorCtlType token, std::string_view level) {
+    auto end_token = details::GetOutputEndColorToken();
+    details::SetOutputColor(token);
+    Logger::PrintTime(std::cout);
+    std::cout << '[' << level << "] ";
+    return LogHelper(std::cout, [=] { details::SetOutputColor(end_token); });
+  }
+
+  LogHelper StderrLog(details::ColorCtlType token, std::string_view level) {
+    auto end_token = details::GetErrorEndColorToken();
+    details::SetErrorColor(token);
+    Logger::PrintTime(std::cerr);
+    std::cerr << '[' << level << "] ";
+    return LogHelper(std::cerr, [=] { details::SetErrorColor(end_token); });
   }
 };
 
