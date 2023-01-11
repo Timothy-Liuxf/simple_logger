@@ -41,7 +41,7 @@ $ git submodule update --init --recursive
 
 ## Get Started
 
-`simple_logger` is a header-only library and needn't to be built. Just add the `include` directory into the *include directory* of your C++ project and include `simple_logger/simple_logger.hpp` to get started.
+`simple_logger` is a header-only library and needn't to be built. Just add the `include` and `third_party/fmt/include` directories into the *include directories* of your C++ project and include `simple_logger/simple_logger.hpp` to get started.
 
 ### Log Levels
 
@@ -184,7 +184,7 @@ To specify log levels, you should define the following macros before including `
 
 ### Thread Safety
 
-The log object `logger` is thread-safe. To use thread-unsafe log to avoid improve performance, you can use `uslogger`:
+The log object `logger` is thread-safe. To use thread-unsafe log to avoid improve performance, you can use `uslogger`. For an example, the following code will cause chaos (changing `uslogger` to `logger` would fix it):
 
 ```c++
 #include <simple_logger/simple_logger.hpp>
