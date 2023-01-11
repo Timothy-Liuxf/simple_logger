@@ -78,7 +78,6 @@ class LoggerLock<true> {
 template <bool ThreadSafe>
 class Logger {
  public:
-  template <bool ThreadSafeInternal>
   class LogHelper {
    private:
     LogHelper(std::ostream& os, const std::function<void()>& postfix)
@@ -90,9 +89,22 @@ class Logger {
 
    public:
     ~LogHelper() noexcept(false) {
-      this->postfix_();
-      this->os_ << std::endl;
-      details::LoggerLock<ThreadSafeInternal>::Unlock();
+      auto functy = [this] {
+        this->postfix_();
+        this->os_ << std::endl;
+      };
+
+      if constexpr (ThreadSafe) {
+        try {
+          functy();
+        } catch (...) {
+          details::LoggerLock<ThreadSafe>::Unlock();
+          throw;
+        }
+        details::LoggerLock<ThreadSafe>::Unlock();
+      } else {
+        functy();
+      }
     }
 
    public:
@@ -210,52 +222,48 @@ class Logger {
                           std::chrono::system_clock::now())));
   }
 
-  LogHelper<ThreadSafe> StdoutLog(details::ColorCtlType token,
-                                  std::string_view      level) {
+  LogHelper StdoutLog(details::ColorCtlType token, std::string_view level) {
     auto functy = [&] {
       auto end_token = details::GetOutputEndColorToken();
       details::SetOutputColor(token);
       Logger::PrintTime(std::cout);
       std::cout << '[' << level << "] ";
-      return LogHelper<ThreadSafe>(std::cout,
-                                   [=] { details::SetOutputColor(end_token); });
+      return LogHelper(std::cout, [=] { details::SetOutputColor(end_token); });
     };
     return this->HandleThreadSafe(functy);
   }
 
-  LogHelper<ThreadSafe> StdoutLog(std::string_view level) {
+  LogHelper StdoutLog(std::string_view level) {
     auto functy = [&] {
       Logger::PrintTime(std::cout);
       std::cout << '[' << level << "] ";
-      return LogHelper<ThreadSafe>(std::cout, [] {});
+      return LogHelper(std::cout, [] {});
     };
     return this->HandleThreadSafe(functy);
   }
 
-  LogHelper<ThreadSafe> StderrLog(details::ColorCtlType token,
-                                  std::string_view      level) {
+  LogHelper StderrLog(details::ColorCtlType token, std::string_view level) {
     auto functy = [&] {
       auto end_token = details::GetErrorEndColorToken();
       details::SetErrorColor(token);
       Logger::PrintTime(std::cerr);
       std::cerr << '[' << level << "] ";
-      return LogHelper<ThreadSafe>(std::cerr,
-                                   [=] { details::SetErrorColor(end_token); });
+      return LogHelper(std::cerr, [=] { details::SetErrorColor(end_token); });
     };
     return this->HandleThreadSafe(functy);
   }
 
-  LogHelper<ThreadSafe> StderrLog(std::string_view level) {
+  LogHelper StderrLog(std::string_view level) {
     auto functy = [&] {
       Logger::PrintTime(std::cerr);
       std::cerr << '[' << level << "] ";
-      return LogHelper<ThreadSafe>(std::cerr, [] {});
+      return LogHelper(std::cerr, [] {});
     };
     return this->HandleThreadSafe(functy);
   }
 
   template <typename Functy>
-  LogHelper<ThreadSafe> HandleThreadSafe(Functy&& functy) {
+  LogHelper HandleThreadSafe(Functy&& functy) {
     if constexpr (ThreadSafe) {
       details::LoggerLock<ThreadSafe>::Lock();
       try {
