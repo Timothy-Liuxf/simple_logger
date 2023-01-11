@@ -199,6 +199,7 @@ constexpr std::size_t nthreads = 128;
 using namespace simple_logger;
 
 int main(int argc, char*[]) {
+  std::vector<std::unique_ptr<std::thread>> threads(nthreads);
   for (std::size_t i = 0; i < nthreads; ++i) {
     threads[i] = std::make_unique<std::thread>([i, argc] {
       std::this_thread::yield();
