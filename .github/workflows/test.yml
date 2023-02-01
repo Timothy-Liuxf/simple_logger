@@ -25,13 +25,24 @@ jobs:
           extensions: 'c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx,i,ixx,ipp,i++'
           clangFormatVersion: 14
           inplace: False
-      - name: Build examples
+      - name: Build examples with CMake
         run: |
           mkdir build
           pushd build
           cmake ..
           make -j$(nproc)
           popd
+      - name: Run tests
+        run: |
+          python3 ./test/test.py
+      - name: Clean CMake build files
+        run: |
+          rm -rf build
+      - name: Build examples with GNU Autotools
+        run: |
+          autoreconf -i
+          ./configure
+          make -j$(nproc)
       - name: Run tests
         run: |
           python3 ./test/test.py
