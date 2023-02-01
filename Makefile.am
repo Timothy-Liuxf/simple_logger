@@ -1,4 +1,4 @@
-bin_PROGRAMS =
+noinst_PROGRAMS =
 noinst_HEADERS =
 
 include third_party/Makefile.inc.am
