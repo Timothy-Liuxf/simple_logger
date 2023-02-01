@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_INIT([simple_logger], [0.2.1.0], [liuxf19@163.com], [simple_logger],      dnl
+AC_INIT([simple_logger], [0.2.2.0], [liuxf19@163.com], [simple_logger],      dnl
     [https://github.com/Timothy-Liuxf/simple_logger])
 AC_CONFIG_SRCDIR([include/simple_logger/simple_logger.hpp])
 AC_CONFIG_HEADERS([config.h])
@@ -16,6 +16,9 @@ AX_APPEND_COMPILE_FLAGS([                                                    dnl
     -Iinclude                                                                dnl
     -Ithird_party/fmt/include                                                dnl
 ], [CXXFLAGS])
+
+# Whether to build test examples
+AM_CONDITIONAL([BUILD_TEST_EXAMPLES], [test "x$BUILD_TEST_EXAMPLES" = "x1"])
 
 # Checks for programs.
 AC_PROG_CXX

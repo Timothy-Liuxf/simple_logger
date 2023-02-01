@@ -237,7 +237,7 @@ For Unix-like platforms with **GNU Autotools**, run:
 
 ```shell
 $ autoreconf -i
-$ ./configure
+$ BUILD_TEST_EXAMPLES=1 ./configure
 $ make -j$(nproc)
 ```
 
