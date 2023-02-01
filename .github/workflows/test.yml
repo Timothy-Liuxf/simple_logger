@@ -41,7 +41,7 @@ jobs:
       - name: Build examples with GNU Autotools
         run: |
           autoreconf -i
-          ./configure
+          BUILD_TEST_EXAMPLES=1 ./configure
           make -j$(nproc)
       - name: Run tests
         run: |

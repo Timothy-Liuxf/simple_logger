@@ -17,6 +17,9 @@ AX_APPEND_COMPILE_FLAGS([                                                    dnl
     -Ithird_party/fmt/include                                                dnl
 ], [CXXFLAGS])
 
+# Whether to build test examples
+AM_CONDITIONAL([BUILD_TEST_EXAMPLES], [test "x$BUILD_TEST_EXAMPLES" = "x1"])
+
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CPP
