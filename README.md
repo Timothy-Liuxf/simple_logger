@@ -222,12 +222,22 @@ int main(int argc, char*[]) {
 
 Source code of the examples are in the `examples` directory.
 
-To build the examples, run:
+To build the examples:
+
+For all platforms with **CMake**, run:
 
 ```shell
 $ mkdir build
 $ cd build
 $ cmake ..
+$ make -j$(nproc)
+```
+
+For Unix-like platforms with **GNU Autotools**, run:
+
+```shell
+$ autoreconf -i
+$ ./configure
 $ make -j$(nproc)
 ```
 
@@ -248,3 +258,4 @@ All rights reserved
 ## LICENSE
 
 [MIT License](https://github.com/Timothy-Liuxf/simple_logger/blob/master/LICENSE.txt)
+
