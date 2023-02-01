@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_INIT([simple_logger], [0.2.1.0], [liuxf19@163.com], [simple_logger],      dnl
-    [https://timothy-liuxf.github.io/simple_logger])
+    [https://github.com/Timothy-Liuxf/simple_logger])
 AC_CONFIG_SRCDIR([include/simple_logger/simple_logger.hpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIRS([third_party/autoconf-archive/m4])
