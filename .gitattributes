@@ -43,8 +43,3 @@
 # in Unix via a file share from Windows, the scripts will work.
 ###############################################################################
 *.sh text eol=lf
-
-###############################################################################
-# Correct Github language recognition
-###############################################################################
-Makefile.inc.am linguist-language=Makefile
