@@ -160,10 +160,9 @@ class Logger {
     (this->Trace() << ... << std::forward<Vals>(vals));
   }
 
-  template <typename Format, typename... Args>
-  void Tracef(Format&& fmt, Args&&... args) {
-    this->Trace() << fmt::format(std::forward<Format>(fmt),
-                                 std::forward<Args>(args)...);
+  template <typename... Args>
+  void Tracef(fmt::format_string<Args...> fmt, Args&&... args) {
+    this->Trace() << fmt::format(fmt, std::forward<Args>(args)...);
   }
 
   auto Debug() {
@@ -179,10 +178,9 @@ class Logger {
     (this->Debug() << ... << std::forward<Vals>(vals));
   }
 
-  template <typename Format, typename... Args>
-  void Debugf(Format&& fmt, Args&&... args) {
-    this->Debug() << fmt::format(std::forward<Format>(fmt),
-                                 std::forward<Args>(args)...);
+  template <typename... Args>
+  void Debugf(fmt::format_string<Args...> fmt, Args&&... args) {
+    this->Debug() << fmt::format(fmt, std::forward<Args>(args)...);
   }
 
   auto Info() {
@@ -198,10 +196,9 @@ class Logger {
     (this->Info() << ... << std::forward<Vals>(vals));
   }
 
-  template <typename Format, typename... Args>
-  void Infof(Format&& fmt, Args&&... args) {
-    this->Info() << fmt::format(std::forward<Format>(fmt),
-                                std::forward<Args>(args)...);
+  template <typename... Args>
+  void Infof(fmt::format_string<Args...> fmt, Args&&... args) {
+    this->Info() << fmt::format(fmt, std::forward<Args>(args)...);
   }
 
   auto Warn() {
@@ -217,10 +214,9 @@ class Logger {
     (this->Warn() << ... << std::forward<Vals>(vals));
   }
 
-  template <typename Format, typename... Args>
-  void Warnf(Format&& fmt, Args&&... args) {
-    this->Warn() << fmt::format(std::forward<Format>(fmt),
-                                std::forward<Args>(args)...);
+  template <typename... Args>
+  void Warnf(fmt::format_string<Args...> fmt, Args&&... args) {
+    this->Warn() << fmt::format(fmt, std::forward<Args>(args)...);
   }
 
   auto Error() {
@@ -236,10 +232,9 @@ class Logger {
     (this->Error() << ... << std::forward<Vals>(vals));
   }
 
-  template <typename Format, typename... Args>
-  void Errorf(Format&& fmt, Args&&... args) {
-    this->Error() << fmt::format(std::forward<Format>(fmt),
-                                 std::forward<Args>(args)...);
+  template <typename... Args>
+  void Errorf(fmt::format_string<Args...> fmt, Args&&... args) {
+    this->Error() << fmt::format(fmt, std::forward<Args>(args)...);
   }
 
   auto Fatal() {
@@ -255,10 +250,9 @@ class Logger {
     (this->Fatal() << ... << std::forward<Vals>(vals));
   }
 
-  template <typename Format, typename... Args>
-  void Fatalf(Format&& fmt, Args&&... args) {
-    this->Fatal() << fmt::format(std::forward<Format>(fmt),
-                                 std::forward<Args>(args)...);
+  template <typename... Args>
+  void Fatalf(fmt::format_string<Args...> fmt, Args&&... args) {
+    this->Fatal() << fmt::format(fmt, std::forward<Args>(args)...);
   }
 
  private:
