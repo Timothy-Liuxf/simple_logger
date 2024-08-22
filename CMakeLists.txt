@@ -7,7 +7,7 @@ project(simple_logger
 )
 set(CMAKE_CXX_STANDARD 17)
 if(MSVC)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX /utf-8")
 else()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Werror")
 endif()
