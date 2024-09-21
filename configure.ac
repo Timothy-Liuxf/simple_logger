@@ -7,7 +7,7 @@ AC_CONFIG_SRCDIR([include/simple_logger/simple_logger.hpp])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIRS([third_party/autoconf-archive/m4])
 
-AM_INIT_AUTOMAKE([foreign subdir-objects])
+AM_INIT_AUTOMAKE([foreign subdir-objects tar-pax])
 
 AX_CXX_COMPILE_STDCXX_17([noext], [mandatory])
 CXXFLAGS=""
