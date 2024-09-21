@@ -3,4 +3,4 @@
 	url = https://github.com/fmtlib/fmt.git
 [submodule "third_party/autoconf-archive"]
 	path = third_party/autoconf-archive
-	url = git://git.sv.gnu.org/autoconf-archive.git
+	url = https://github.com/autoconf-archive/autoconf-archive.git
